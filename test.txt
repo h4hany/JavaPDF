@@ -1,0 +1,28 @@
+1 Mrz Information
+Line One Data P<EGYSAYED<AHMED<<YOUSRA<ABDELKARI
+M<ARAFAT<<
+Line Two Data A112879275EGY8211103F2101015<<<<<<<<<<<
+<<<04
+Line Three Data
+Type P
+Document Number A11287927
+Date of Birth 821110
+Date of Expiry 210101
+Issuer EGY
+Nationality EGY
+Last Names SAYED AHMED
+First Names YOUSRA ABDELKARIM ARAFAT
+Discretionary 1 <<<<<<<<<<<<<<
+Discretionary 2
+Gender F
+04.08.2016 12:05:30 Page 1 Captured by Access IS Document Reader
+2 Colour Image
+  
+InfraRed Image
+  
+04.08.2016 12:05:30 Page 2 Captured by Access IS Document Reader
+3 UltraViolet Image
+  
+Face Image
+  
+04.08.2016 12:05:30 Page 3 Captured by Access IS Document Reader
