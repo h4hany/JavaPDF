@@ -174,6 +174,8 @@ public class Extract extends javax.swing.JFrame {
                 Logger.getLogger(Extract.class.getName()).log(Level.SEVERE, null, ex);
             } catch (DocumentException ex) {
                 Logger.getLogger(Extract.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(Extract.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_bntSaveActionPerformed

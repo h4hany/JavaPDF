@@ -332,7 +332,7 @@ public class ExtractInfo {
 
     public static void main(String[] args) throws Exception, IOException {
         ExtractInfo up = new ExtractInfo();
-                Map<String, String> map = new HashMap<String, String>();
+            /*    Map<String, String> map = new HashMap<String, String>();
 
       map= up.fileInfoSeMap("1 Mrz Information\n" +
 "Line One Data P<EGYSAYED<AHMED<<YOUSRA<ABDELKARI\n" +
@@ -353,11 +353,11 @@ public class ExtractInfo {
 "Gender F");
         
         up.sendDataToServerMap("http://localhost/upload/test.php",map);
+        */
+         String kk;
+        File f=new File("doaa/doaa-16.null");
+        kk=up.imageToBase64String(f);
         
-        // String kk;
-       //  File f=new File("doaa/doaa-16.null");
-      //  kk=up.imageToBase64String(f);
-     
       //up.sendDataToServern("http://localhost/upload/test.php",kk);
         //up.extractImages("vv.pdf");
         /*List<String> arrayOftext = new ArrayList<String>();

@@ -77,7 +77,7 @@ public class ControlPDF {
                 }
             }
         } catch (IOException ex) {
-            System.out.println("Error: " + ex.getMessage());
+          //  System.out.println("Error: " + ex.getMessage());
             ex.printStackTrace();
         }
         return stringArrayVar;
@@ -181,7 +181,7 @@ public class ControlPDF {
                 }
             }
         } catch (IOException ex) {
-            System.out.println("Error: " + ex.getMessage());
+          //  System.out.println("Error: " + ex.getMessage());
             ex.printStackTrace();
         }
         return map;
@@ -199,7 +199,7 @@ public class ControlPDF {
         // send your parameters to your site
 
         for (Map.Entry<String, String> m : set) {
-            System.out.println("Key :" + m.getKey() + " Vlue : " + m.getValue());
+         //   System.out.println("Key :" + m.getKey() + " Vlue : " + m.getValue());
             ps.print("&" + m.getKey().replace(" ", "") + "=" + m.getValue());
 
         }
@@ -215,7 +215,7 @@ public class ControlPDF {
                         con.getInputStream()));
         String decodedString;
         while ((decodedString = in.readLine()) != null) {
-            System.out.println(decodedString);
+          //  System.out.println(decodedString);
         }
         in.close();
 
@@ -247,11 +247,11 @@ public class ControlPDF {
 
         while ((decodedString = in.readLine()) != null) {
             my = decodedString;
-            System.out.println(decodedString);
+           // System.out.println(decodedString);
         }
 
         in.close();
-        System.out.println("after : " + my);
+      //  System.out.println("after : " + my);
         return my;
     }
 
