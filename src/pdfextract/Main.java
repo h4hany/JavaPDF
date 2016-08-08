@@ -54,7 +54,6 @@ public class Main extends javax.swing.JFrame {
         jPanalFirst = new javax.swing.JPanel();
         pathText = new javax.swing.JTextField();
         jPanalSnd = new javax.swing.JPanel();
-        bntSave = new javax.swing.JButton();
         btnBrowse = new javax.swing.JButton();
         saveInDB = new javax.swing.JButton();
 
@@ -154,21 +153,13 @@ public class Main extends javax.swing.JFrame {
 
         jPanalSnd.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        bntSave.setText("Save");
-        bntSave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bntSaveActionPerformed(evt);
-            }
-        });
-        jPanalSnd.add(bntSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 40, 135, 40));
-
         btnBrowse.setText("Browse");
         btnBrowse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBrowseActionPerformed(evt);
             }
         });
-        jPanalSnd.add(btnBrowse, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, 147, 40));
+        jPanalSnd.add(btnBrowse, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 150, 50));
 
         saveInDB.setText("Submit To Database");
         saveInDB.addActionListener(new java.awt.event.ActionListener() {
@@ -176,7 +167,7 @@ public class Main extends javax.swing.JFrame {
                 saveInDBActionPerformed(evt);
             }
         });
-        jPanalSnd.add(saveInDB, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 120, -1, 46));
+        jPanalSnd.add(saveInDB, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 80, -1, 50));
 
         jPanel1.add(jPanalSnd);
 
@@ -198,9 +189,9 @@ String userName, password;
             // TODO add your handling code here:
             userName = userNameTxt.getText();
             password = passwordTxt.getText();
-           
+            // System.out.println(contPdf.authFromZend("http://zend.test.com/user/java", userName, password).equals("AUTH"));
 
-            if (contPdf.authFromZend("http://zend.test.com/user/java", userName, password).equals("AUTH")) {
+            if (contPdf.authFromZend("http://zend.test.com/user/java", userName, password).equals("AUTH") == true) {
 
                 CardLayout cl = (CardLayout) (cards.getLayout());
                 cl.show(cards, "card3");
@@ -218,43 +209,6 @@ String userName, password;
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void bntSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntSaveActionPerformed
-        // TODO add your handling code here:
-        if (browsePath == null || browsePath.isEmpty() || browsePath.equals("")) {
-            JOptionPane.showMessageDialog(this,
-                    "Please Choose the file first .",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-
-        } else {
-            try {
-                JFileChooser openFile = new JFileChooser();
-                openFile.showOpenDialog(null);
-                savePath = openFile.getSelectedFile();
-
-                if (contPdf.parsePdfToText(browsePath, savePath)) {
-
-                    JOptionPane.showMessageDialog(this,
-                            "Your file is ready to use",
-                            "Success",
-                            JOptionPane.INFORMATION_MESSAGE);
-
-                } else {
-
-                    JOptionPane.showMessageDialog(this,
-                            "Somthing Went Wrong please check the support",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                }
-
-            } catch (IOException ex) {
-                Logger.getLogger(Extract.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (DocumentException ex) {
-                Logger.getLogger(Extract.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }//GEN-LAST:event_bntSaveActionPerformed
-
     private void btnBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBrowseActionPerformed
         // TODO add your handling code here:
         JFileChooser openFile = new JFileChooser();
@@ -264,52 +218,51 @@ String userName, password;
     }//GEN-LAST:event_btnBrowseActionPerformed
 
     private void saveInDBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveInDBActionPerformed
-        // TODO add your handling code here:
-        List<String> arrayOftext = new ArrayList<String>();
-        String[] variables;
-        Map<String, String> map = new HashMap<String, String>();
-
-        // arrayOftext = up.parsePdf("vv.pdf");
-        if (browsePath == null || browsePath.isEmpty() || browsePath.equals("")) {
-            JOptionPane.showMessageDialog(this,
-                    "Please Choose the file first .",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-
-        } else {
-            try {
-
-                arrayOftext = contPdf.parsePdf(browsePath);
-
-                if (arrayOftext.size() > 0) {
-                    // variables = contPdf.fileInfoSe(arrayOftext.get(0));
-
-                    //get the result of data in form of key and value
-                    map = contPdf.fileInfoSeMap(arrayOftext.get(0));
-
-                    //send result to server
-                    contPdf.sendDataToServerMap("http://zend.test.com/user/new", map);
-
-                    // String[] colName;
-                    // String[] valueName;
-                    // contPdf.sendDataToServer(serverUrl,colName,valueName);
-                    JOptionPane.showMessageDialog(this,
-                            "Saved in db",
-                            "Success",
-                            JOptionPane.INFORMATION_MESSAGE);
-
-                } else {
-
-                    JOptionPane.showMessageDialog(this,
-                            "Somthing Went Wrong please check the support",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
+        try {
+            // TODO add your handling code here:
+            if(saveLocal(browsePath) == true){
+                List<String> arrayOftext = new ArrayList<String>();
+                String[] variables;
+                Map<String, String> map = new HashMap<String, String>();
+                
+                
+                try {
+                    
+                    arrayOftext = contPdf.parsePdf(browsePath);
+                    
+                    if (arrayOftext.size() > 0) {
+                        // variables = contPdf.fileInfoSe(arrayOftext.get(0));
+                        
+                        //get the result of data in form of key and value
+                        map = contPdf.fileInfoSeMap(arrayOftext.get(0));
+                        
+                        //send result to server
+                        contPdf.sendDataToServerMap("http://zend.test.com/user/new", map);
+                        
+                        // String[] colName;
+                        // String[] valueName;
+                        // contPdf.sendDataToServer(serverUrl,colName,valueName);
+                        JOptionPane.showMessageDialog(this,
+                                "Saved in db",
+                                "Success",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        
+                    } else {
+                        
+                        JOptionPane.showMessageDialog(this,
+                                "Somthing Went Wrong please check the support",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                    
+                } catch (IOException ex) {
+                    Logger.getLogger(Extract.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
-            } catch (IOException ex) {
-                Logger.getLogger(Extract.class.getName()).log(Level.SEVERE, null, ex);
             }
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }//GEN-LAST:event_saveInDBActionPerformed
 
     /**
@@ -347,8 +300,44 @@ String userName, password;
         });
     }
 
+    public boolean saveLocal(String browsePath) throws Exception {
+        boolean success = true;
+        if (browsePath == null || browsePath.isEmpty() || browsePath.equals("")) {
+            JOptionPane.showMessageDialog(this,
+                    "Please Choose the file first .",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+
+        } else {
+            try {
+                JFileChooser openFile = new JFileChooser();
+               openFile.setDialogTitle("Save Parsing Data");
+                openFile.showOpenDialog(null);
+                savePath = openFile.getSelectedFile();
+
+                if (contPdf.parsePdfToText(browsePath, savePath)) {
+
+                   success = true;
+
+                } else {
+
+                    JOptionPane.showMessageDialog(this,
+                            "Somthing Went Wrong please check the support",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    
+                    success = false;
+                }
+
+            } catch (IOException ex) {
+                Logger.getLogger(Extract.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (DocumentException ex) {
+                Logger.getLogger(Extract.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return success;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton bntSave;
     private javax.swing.JButton btnBrowse;
     private javax.swing.JPanel cards;
     private javax.swing.JButton jButton1;

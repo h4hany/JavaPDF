@@ -113,22 +113,27 @@ public class ControlPDF {
         reader.close();
     }
 
-    public boolean parsePdfToText(String pdfPath, File destnationPath) throws IOException, DocumentException {
-
+    public boolean parsePdfToText(String pdfPath, File destnationPath) throws IOException, DocumentException ,Exception{
+        String desPath=null;
         PdfReader reader = new PdfReader(pdfPath);
         PdfReaderContentParser parser = new PdfReaderContentParser(reader);
-        String desPath = destnationPath.getName();
-        new File(desPath.replace(".txt", "")).mkdir();
-        PrintWriter out = new PrintWriter(new FileOutputStream(desPath.replace(".txt", "") + "/" + destnationPath.getName()));
-        TextExtractionStrategy strategy;
-        for (int i = 1; i <= reader.getNumberOfPages(); i++) {
-            strategy = parser.processContent(i, new SimpleTextExtractionStrategy());
-            out.println(i + " " + strategy.getResultantText());
-        }
-        reader.close();
-        out.flush();
-        out.close();
-        extractImages(pdfPath, desPath.replace(".txt", "") + "/" + desPath.replace(".txt", ""));
+        try{desPath = destnationPath.getName();
+        
+     
+
+            new File(desPath.replace(".txt", "")).mkdir();
+            PrintWriter out = new PrintWriter(new FileOutputStream(desPath.replace(".txt", "") + "/" + destnationPath.getName()));
+            TextExtractionStrategy strategy;
+            for (int i = 1; i <= reader.getNumberOfPages(); i++) {
+                strategy = parser.processContent(i, new SimpleTextExtractionStrategy());
+                out.println(i + " " + strategy.getResultantText());
+            }
+            reader.close();
+            out.flush();
+            out.close();
+            extractImages(pdfPath, desPath.replace(".txt", "") + "/" + desPath.replace(".txt", ""));
+        }catch(Exception ex){}
+        
         return true;
     }
 
@@ -212,8 +217,9 @@ public class ControlPDF {
 
     }
     String my;
+
     public String authFromZend(String yourUrl, String username, String password) throws MalformedURLException, IOException {
-       
+
         URL url = new URL(yourUrl);
         URLConnection con = url.openConnection();
         // activate the output
@@ -234,12 +240,11 @@ public class ControlPDF {
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(
                         con.getInputStream()));
-        
+
         while ((decodedString = in.readLine()) != null) {
-            my=decodedString;
+            my = decodedString;
             System.out.println(decodedString);
         }
-        
 
         in.close();
         System.out.println("after : " + my);
