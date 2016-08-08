@@ -6,17 +6,8 @@
 package pdfextract;
 
 import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.parser.PdfReaderContentParser;
-import com.itextpdf.text.pdf.parser.SimpleTextExtractionStrategy;
-import com.itextpdf.text.pdf.parser.TextExtractionStrategy;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,8 +17,6 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
 
 /**
  *
@@ -209,10 +198,17 @@ public class Extract extends javax.swing.JFrame {
 
                 if (arrayOftext.size() > 0) {
                    // variables = contPdf.fileInfoSe(arrayOftext.get(0));
+                   
+                   //get the result of data in form of key and value 
                     map= contPdf.fileInfoSeMap(arrayOftext.get(0));
+                    
+                   //send result to server 
+                   contPdf.sendDataToServerMap("http://localhost/upload/test.php", map);
+                    
+                    
                    // String[] colName;
                    // String[] valueName;
-                    // contPdf.sendDataToServer(serverUrl,colName,valueName);
+                   // contPdf.sendDataToServer(serverUrl,colName,valueName);
                     
                     JOptionPane.showMessageDialog(this,
                             "Saved in db",
