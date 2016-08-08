@@ -113,13 +113,13 @@ public class ControlPDF {
         reader.close();
     }
 
-    public boolean parsePdfToText(String pdfPath, File destnationPath) throws IOException, DocumentException ,Exception{
-        String desPath=null;
+    public boolean parsePdfToText(String pdfPath, File destnationPath) throws IOException, DocumentException, Exception {
+        boolean success;
+        String desPath = null;
         PdfReader reader = new PdfReader(pdfPath);
         PdfReaderContentParser parser = new PdfReaderContentParser(reader);
-        try{desPath = destnationPath.getName();
-        
-     
+        try {
+            desPath = destnationPath.getName();
 
             new File(desPath.replace(".txt", "")).mkdir();
             PrintWriter out = new PrintWriter(new FileOutputStream(desPath.replace(".txt", "") + "/" + destnationPath.getName()));
@@ -132,9 +132,13 @@ public class ControlPDF {
             out.flush();
             out.close();
             extractImages(pdfPath, desPath.replace(".txt", "") + "/" + desPath.replace(".txt", ""));
-        }catch(Exception ex){}
-        
-        return true;
+            success = true;
+        } catch (Exception ex) {
+            success = false;
+
+        }
+
+        return success;
     }
 
     public static String imageToBase64String(File imageFile) throws Exception {
