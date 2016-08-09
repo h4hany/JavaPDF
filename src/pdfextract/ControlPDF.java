@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 /**
@@ -35,6 +37,7 @@ import javax.imageio.ImageIO;
  * @author hany
  */
 public class ControlPDF {
+    String response;
 
     public List<String> parsePdf(String pdfPath) throws IOException {
         PdfReader reader = new PdfReader(pdfPath);
@@ -113,8 +116,9 @@ public class ControlPDF {
         reader.close();
     }
 
-    public boolean parsePdfToText(String pdfPath, File destnationPath) throws IOException, DocumentException, Exception {
-        boolean success;
+    public String parsePdfToText(String pdfPath, File destnationPath) throws IOException, DocumentException, Exception {
+        //boolean success;
+        String kk="";
         String desPath = null;
         PdfReader reader = new PdfReader(pdfPath);
         PdfReaderContentParser parser = new PdfReaderContentParser(reader);
@@ -132,13 +136,15 @@ public class ControlPDF {
             out.flush();
             out.close();
             extractImages(pdfPath, desPath.replace(".txt", "") + "/" + desPath.replace(".txt", ""));
-            success = true;
+            File f=new File(desPath.replace(".txt", "")+"/"+desPath.replace(".txt", "")+"-16.null");
+            kk=imageToBase64String(f);
+            //success = true;
         } catch (Exception ex) {
-            success = false;
+            //success = false;
 
         }
 
-        return success;
+        return kk;
     }
 
     public static String imageToBase64String(File imageFile) throws Exception {
@@ -187,7 +193,7 @@ public class ControlPDF {
         return map;
     }
 
-    public void sendDataToServerMap(String yourUrl, Map<String, String> map) throws MalformedURLException, IOException {
+    public void sendDataToServerMap(String yourUrl, Map<String, String> map,String image) throws MalformedURLException, IOException {
 
         Set<Map.Entry<String, String>> set = map.entrySet();
 
@@ -197,15 +203,27 @@ public class ControlPDF {
         con.setDoOutput(true);
         PrintStream ps = new PrintStream(con.getOutputStream());
         // send your parameters to your site
-
+        ps.print("&image="+image);
+       
         for (Map.Entry<String, String> m : set) {
-         //   System.out.println("Key :" + m.getKey() + " Vlue : " + m.getValue());
+        // System.out.println("Key :" + m.getKey() + " Vlue : " + m.getValue());
             ps.print("&" + m.getKey().replace(" ", "") + "=" + m.getValue());
 
         }
 
         // we have to get the input stream in order to actually send the request
-        con.getInputStream();
+        Thread thread = new Thread(){
+    public void run(){
+        try {
+            con.getInputStream();
+        } catch (IOException ex) {
+            Logger.getLogger(ControlPDF.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+  };
+
+  thread.start();
 
         // close the print stream
         ps.close();
@@ -215,13 +233,12 @@ public class ControlPDF {
                         con.getInputStream()));
         String decodedString;
         while ((decodedString = in.readLine()) != null) {
-          //  System.out.println(decodedString);
+          System.out.println(decodedString);
         }
         in.close();
 
     }
-    String my;
-
+    
     public String authFromZend(String yourUrl, String username, String password) throws MalformedURLException, IOException {
 
         URL url = new URL(yourUrl);
@@ -246,13 +263,13 @@ public class ControlPDF {
                         con.getInputStream()));
 
         while ((decodedString = in.readLine()) != null) {
-            my = decodedString;
+            response = decodedString;
            // System.out.println(decodedString);
         }
 
         in.close();
       //  System.out.println("after : " + my);
-        return my;
+        return response;
     }
 
 }

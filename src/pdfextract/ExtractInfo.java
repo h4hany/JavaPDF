@@ -329,7 +329,7 @@ public class ExtractInfo {
         // close the print stream
         ps.close();
     }
-
+/*
     public static void main(String[] args) throws Exception, IOException {
         ExtractInfo up = new ExtractInfo();
             /*    Map<String, String> map = new HashMap<String, String>();
@@ -354,10 +354,10 @@ public class ExtractInfo {
         
         up.sendDataToServerMap("http://localhost/upload/test.php",map);
         */
-         String kk;
-        File f=new File("doaa/doaa-16.null");
-        kk=up.imageToBase64String(f);
-        
+        // String kk;
+       // File f=new File("cris/cris-16.null");
+     //   kk=up.imageToBase64String(f);
+      //   System.out.println(kk);
       //up.sendDataToServern("http://localhost/upload/test.php",kk);
         //up.extractImages("vv.pdf");
         /*List<String> arrayOftext = new ArrayList<String>();
@@ -375,5 +375,5 @@ public class ExtractInfo {
         //  String[] colNames={"name","age"};
         //  String[] postArray={"java","20"};
         // up.sendDataToServer("http://localhost/upload/test.php", colNames, postArray);
-    }
+    //}
 }
