@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.imageio.ImageIO;
+
 /**
  *
  * @author hany
@@ -215,19 +216,20 @@ public class ExtractInfo {
         }
     }
 
-    public void extractImages(String filename)
-            throws IOException, DocumentException {
+    public void extractImages(String filename)throws IOException, DocumentException {
+        
         PdfReader reader = new PdfReader(filename);
         PdfReaderContentParser parser = new PdfReaderContentParser(reader);
         ImageRenderListener listener = new ImageRenderListener("spdf");
-        
+
         for (int i = 1; i <= reader.getNumberOfPages(); i++) {
             parser.processContent(i, listener);
         }
         reader.close();
+        BufferedImage buffImage;
     }
-    
-     public byte[] extractBytes(String ImageName) throws IOException {
+
+    public byte[] extractBytes(String ImageName) throws IOException {
         // open image
         File imgPath = new File(ImageName);
         BufferedImage bufferedImage = ImageIO.read(imgPath);
@@ -238,16 +240,16 @@ public class ExtractInfo {
 
         return (data.getData());
     }
- public void sendDataToServern(String yourUrl, String aa) throws MalformedURLException, IOException {
+
+    public void sendDataToServern(String yourUrl, String aa) throws MalformedURLException, IOException {
         URL url = new URL(yourUrl);
         URLConnection con = url.openConnection();
         // activate the output
         con.setDoOutput(true);
         PrintStream ps = new PrintStream(con.getOutputStream());
         // send your parameters to your site
-     
-          ps.print("&data=" + aa);
 
+        ps.print("&data=" + aa);
 
         // we have to get the input stream in order to actually send the request
         con.getInputStream();
@@ -255,8 +257,7 @@ public class ExtractInfo {
         // close the print stream
         ps.close();
     }
- 
- 
+
     public static String imageToBase64String(File imageFile) throws Exception {
 
         String image = null;
@@ -271,8 +272,7 @@ public class ExtractInfo {
         }
         return image;
     }
-    
-    
+
     public Map<String, String> fileInfoSeMap(String arrayOftext) throws MalformedURLException, IOException, FileNotFoundException {
         Map<String, String> map = new HashMap<String, String>();
         String line;
@@ -293,7 +293,7 @@ public class ExtractInfo {
 
                     if (line.contains(stringArrayNames[i])) {
                         stringArrayVar[i] = line.replace(stringArrayNames[i], "");
-                        map.put(stringArrayNames[i],stringArrayVar[i]);
+                        map.put(stringArrayNames[i], stringArrayVar[i]);
                     }
                 }
             }
@@ -303,9 +303,8 @@ public class ExtractInfo {
         }
         return map;
     }
-    
-    public void sendDataToServerMap(String yourUrl,Map<String, String> map) throws MalformedURLException, IOException {
-        
+
+    public void sendDataToServerMap(String yourUrl, Map<String, String> map) throws MalformedURLException, IOException {
 
         Set<Map.Entry<String, String>> set = map.entrySet();
 
@@ -315,13 +314,12 @@ public class ExtractInfo {
         con.setDoOutput(true);
         PrintStream ps = new PrintStream(con.getOutputStream());
         // send your parameters to your site
-        
-        for (Map.Entry<String,String> m : set) {
-                System.out.println("Key :"+m.getKey() +" Vlue : "+ m.getValue());
-                ps.print("&" + m.getKey().replace(" ", "") + "=" + m.getValue());
 
-                }
- 
+        for (Map.Entry<String, String> m : set) {
+            System.out.println("Key :" + m.getKey() + " Vlue : " + m.getValue());
+            ps.print("&" + m.getKey().replace(" ", "") + "=" + m.getValue());
+
+        }
 
         // we have to get the input stream in order to actually send the request
         con.getInputStream();
@@ -329,51 +327,10 @@ public class ExtractInfo {
         // close the print stream
         ps.close();
     }
-/*
-    public static void main(String[] args) throws Exception, IOException {
-        ExtractInfo up = new ExtractInfo();
-            /*    Map<String, String> map = new HashMap<String, String>();
 
-      map= up.fileInfoSeMap("1 Mrz Information\n" +
-"Line One Data P<EGYSAYED<AHMED<<YOUSRA<ABDELKARI\n" +
-"M<ARAFAT<<\n" +
-"Line Two Data A112879275EGY8211103F2101015<<<<<<<<<<<\n" +
-"<<<04\n" +
-"Line Three Data\n" +
-"Type P\n" +
-"Document Number A11287927\n" +
-"Date of Birth 821110\n" +
-"Date of Expiry 210101\n" +
-"Issuer EGY\n" +
-"Nationality EGY\n" +
-"Last Names SAYED AHMED\n" +
-"First Names YOUSRA ABDELKARIM ARAFAT\n" +
-"Discretionary 1 <<<<<<<<<<<<<<\n" +
-"Discretionary 2\n" +
-"Gender F");
-        
-        up.sendDataToServerMap("http://localhost/upload/test.php",map);
-        */
-        // String kk;
-       // File f=new File("cris/cris-16.null");
-     //   kk=up.imageToBase64String(f);
-      //   System.out.println(kk);
-      //up.sendDataToServern("http://localhost/upload/test.php",kk);
-        //up.extractImages("vv.pdf");
-        /*List<String> arrayOftext = new ArrayList<String>();
-        String[] my;
-        arrayOftext = up.parsePdf("vv.pdf");
-        //System.out.println(arrayOftext.get(0));
-        my = up.fileInfoSe(arrayOftext.get(0));
-        for (int i = 0; i < my.length; i++) {
-            System.out.println(my[i]);
-        }*/
- /*  for(int i =0;i<=arrayOftext.size();i++){
-             
-         System.out.println(arrayOftext.get(i));
-        }*/
-        //  String[] colNames={"name","age"};
-        //  String[] postArray={"java","20"};
-        // up.sendDataToServer("http://localhost/upload/test.php", colNames, postArray);
-    //}
+    /*public static void main(String[] args) throws Exception, IOException {
+        ExtractInfo up = new ExtractInfo();
+        up.extractImages("z.pdf");
+
+    }*/
 }

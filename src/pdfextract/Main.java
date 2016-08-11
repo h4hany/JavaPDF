@@ -24,6 +24,7 @@ import java.awt.Image;
 import java.text.ParseException;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -275,9 +276,13 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
         JFileChooser openFile = new JFileChooser();
         openFile.showOpenDialog(null);
+        openFile.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        openFile.addChoosableFileFilter(new FileNameExtensionFilter("PDF Documents", "pdf"));
         try {
             browsePath = openFile.getSelectedFile().getAbsolutePath();
             pathText.setText(browsePath);
+            
+            
             chooseRadio.setEnabled(true);
             defRadio.setEnabled(true);
             saveInDB.setEnabled(true);
@@ -289,19 +294,19 @@ public class Main extends javax.swing.JFrame {
     String externalImg;
     private void saveInDBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveInDBActionPerformed
         if (chooseRadio.isSelected()) {
-            System.out.println(chooseRadio.isSelected());
-                            System.out.println(imagePath);
+          //  System.out.println(chooseRadio.isSelected());
+          //  System.out.println(imagePath);
 
-            File f =new File(imagePath);
+            File f = new File(imagePath);
             try {
-                externalImg=contPdf.imageToBase64String(f);
+                externalImg = contPdf.imageToBase64String(f);
             } catch (Exception ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
-                   
+
         }
 
-       try {
+        try {
             // TODO add your handling code here:
             if (saveLocal(browsePath) == true) {
                 List<String> arrayOftext = new ArrayList<String>();
@@ -317,12 +322,18 @@ public class Main extends javax.swing.JFrame {
                     map = contPdf.fileInfoSeMap(arrayOftext.get(0));
                     String newImg = defRadio.isSelected() ? img : externalImg;
                     //send result to server
-                    contPdf.sendDataToServerMap("http://zend.test.com/user/new", map, newImg);
+                    if (contPdf.sendDataToServerMap("http://zend.test.com/user/new", map, newImg).equals("true")) {
+                        JOptionPane.showMessageDialog(this,
+                                "Saved in db",
+                                "Success",
+                                JOptionPane.INFORMATION_MESSAGE);
 
-                    JOptionPane.showMessageDialog(this,
-                            "Saved in db",
-                            "Success",
-                            JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(this,
+                                "Somthing Went Wrong please check the support",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
 
                 } else {
 
@@ -358,18 +369,18 @@ public class Main extends javax.swing.JFrame {
                 JOptionPane.INFORMATION_MESSAGE);
 
     }//GEN-LAST:event_jMenuItem2ActionPerformed
-String imagePath;
+    String imagePath;
     private void chooseRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseRadioActionPerformed
         // TODO add your handling code here:
         JFileChooser openFile = new JFileChooser();
         openFile.showOpenDialog(null);
         try {
             imagePath = openFile.getSelectedFile().getAbsolutePath();
-            System.out.println(imagePath);
+           // System.out.println(imagePath);
         } catch (Exception e) {
 
         }
-        
+
     }//GEN-LAST:event_chooseRadioActionPerformed
 
     /**
