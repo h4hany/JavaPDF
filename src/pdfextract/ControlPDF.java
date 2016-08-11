@@ -39,7 +39,7 @@ import javax.imageio.ImageIO;
 public class ControlPDF {
     String response;
 
-    public List<String> parsePdf(String pdfPath) throws IOException {
+    public List<String> parsePdfToArrayList(String pdfPath) throws IOException {
         PdfReader reader = new PdfReader(pdfPath);
         PdfReaderContentParser parser = new PdfReaderContentParser(reader);
         //String [] arrayOftext= new String[300];
@@ -86,26 +86,7 @@ public class ControlPDF {
         return stringArrayVar;
     }
 
-    public void sendDataToServer(String yourUrl, String[] colNames, String[] postArray) throws MalformedURLException, IOException {
-        URL url = new URL(yourUrl);
-        URLConnection con = url.openConnection();
-        // activate the output
-        con.setDoOutput(true);
-        PrintStream ps = new PrintStream(con.getOutputStream());
-        // send your parameters to your site
-        for (int i = 0; i < postArray.length; i++) {
-
-            ps.print("&" + colNames[i] + "=" + postArray[i]);
-        }
-
-        // we have to get the input stream in order to actually send the request
-        con.getInputStream();
-
-        // close the print stream
-        ps.close();
-    }
-
-    public void extractImages(String filename, String save) throws IOException, DocumentException {
+    public void extractImagesFromPdf(String filename, String save) throws IOException, DocumentException {
         PdfReader reader = new PdfReader(filename);
         PdfReaderContentParser parser = new PdfReaderContentParser(reader);
         ImageRenderListener listener = new ImageRenderListener(save);
@@ -116,7 +97,7 @@ public class ControlPDF {
         reader.close();
     }
 
-    public String parsePdfToText(String pdfPath, File destnationPath) throws IOException, DocumentException, Exception {
+    public String pdfToDIrAndimgToString(String pdfPath, File destnationPath) throws IOException, DocumentException, Exception {
         //boolean success;
         String kk="";
         String desPath = null;
@@ -135,7 +116,7 @@ public class ControlPDF {
             reader.close();
             out.flush();
             out.close();
-            extractImages(pdfPath, desPath.replace(".txt", "") + "/" + desPath.replace(".txt", ""));
+            extractImagesFromPdf(pdfPath, desPath.replace(".txt", "") + "/" + desPath.replace(".txt", ""));
             File f=new File(desPath.replace(".txt", "")+"/"+desPath.replace(".txt", "")+"-16.null");
             kk=imageToBase64String(f);
             //success = true;

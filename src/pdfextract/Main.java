@@ -35,13 +35,12 @@ public class Main extends javax.swing.JFrame {
      * Creates new form Main
      */
     public Main() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
- try {
+        try {
             UIManager.setLookAndFeel(new SyntheticaBlackEyeLookAndFeel());
         } catch (UnsupportedLookAndFeelException | ParseException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
         initComponents();
-
 
     }
 
@@ -54,6 +53,7 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         cards = new javax.swing.JPanel();
         loginPanal = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
@@ -70,6 +70,8 @@ public class Main extends javax.swing.JFrame {
         jPanalSnd = new javax.swing.JPanel();
         btnBrowse = new javax.swing.JButton();
         saveInDB = new javax.swing.JButton();
+        defRadio = new javax.swing.JRadioButton();
+        chooseRadio = new javax.swing.JRadioButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -180,12 +182,29 @@ public class Main extends javax.swing.JFrame {
         jPanalSnd.add(btnBrowse, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 150, 50));
 
         saveInDB.setText("Submit To Database");
+        saveInDB.setEnabled(false);
         saveInDB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveInDBActionPerformed(evt);
             }
         });
         jPanalSnd.add(saveInDB, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 80, -1, 50));
+
+        buttonGroup1.add(defRadio);
+        defRadio.setSelected(true);
+        defRadio.setText("Default Photo");
+        defRadio.setEnabled(false);
+        jPanalSnd.add(defRadio, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 10, -1, -1));
+
+        buttonGroup1.add(chooseRadio);
+        chooseRadio.setText("Take extrnal photo");
+        chooseRadio.setEnabled(false);
+        chooseRadio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chooseRadioActionPerformed(evt);
+            }
+        });
+        jPanalSnd.add(chooseRadio, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 40, 190, -1));
 
         jPanel1.add(jPanalSnd);
 
@@ -225,7 +244,7 @@ public class Main extends javax.swing.JFrame {
     File savePath;
 
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
-       try {
+        try {
             // TODO add your handling code here:
             userName = userNameTxt.getText();
             password = passwordTxt.getText();
@@ -247,8 +266,8 @@ public class Main extends javax.swing.JFrame {
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-       /* CardLayout cl = (CardLayout) (cards.getLayout());
+
+        /* CardLayout cl = (CardLayout) (cards.getLayout());
                 cl.show(cards, "card3");*/
     }//GEN-LAST:event_loginBtnActionPerformed
 
@@ -259,48 +278,60 @@ public class Main extends javax.swing.JFrame {
         try {
             browsePath = openFile.getSelectedFile().getAbsolutePath();
             pathText.setText(browsePath);
+            chooseRadio.setEnabled(true);
+            defRadio.setEnabled(true);
+            saveInDB.setEnabled(true);
         } catch (Exception e) {
 
         }
     }//GEN-LAST:event_btnBrowseActionPerformed
-String img;
+    String img;
+    String externalImg;
     private void saveInDBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveInDBActionPerformed
-        try {
+        if (chooseRadio.isSelected()) {
+            System.out.println(chooseRadio.isSelected());
+                            System.out.println(imagePath);
+
+            File f =new File(imagePath);
+            try {
+                externalImg=contPdf.imageToBase64String(f);
+            } catch (Exception ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                   
+        }
+
+       try {
             // TODO add your handling code here:
             if (saveLocal(browsePath) == true) {
                 List<String> arrayOftext = new ArrayList<String>();
-               // String[] variables;
+                // String[] variables;
                 Map<String, String> map = new HashMap<String, String>();
 
-                try {
+                arrayOftext = contPdf.parsePdfToArrayList(browsePath);
 
-                    arrayOftext = contPdf.parsePdf(browsePath);
+                if (arrayOftext.size() > 0) {
+                    // variables = contPdf.fileInfoSe(arrayOftext.get(0));
 
-                    if (arrayOftext.size() > 0) {
-                        // variables = contPdf.fileInfoSe(arrayOftext.get(0));
+                    //get the result of data in form of key and value
+                    map = contPdf.fileInfoSeMap(arrayOftext.get(0));
+                    String newImg = defRadio.isSelected() ? img : externalImg;
+                    //send result to server
+                    contPdf.sendDataToServerMap("http://zend.test.com/user/new", map, newImg);
 
-                        //get the result of data in form of key and value
-                        map = contPdf.fileInfoSeMap(arrayOftext.get(0));
+                    JOptionPane.showMessageDialog(this,
+                            "Saved in db",
+                            "Success",
+                            JOptionPane.INFORMATION_MESSAGE);
 
-                        //send result to server
-                        contPdf.sendDataToServerMap("http://zend.test.com/user/new", map,img);
+                } else {
 
-                        JOptionPane.showMessageDialog(this,
-                                "Saved in db",
-                                "Success",
-                                JOptionPane.INFORMATION_MESSAGE);
-
-                    } else {
-
-                        JOptionPane.showMessageDialog(this,
-                                "Somthing Went Wrong please check the support",
-                                "Error",
-                                JOptionPane.ERROR_MESSAGE);
-                    }
-
-                } catch (IOException ex) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(this,
+                            "Somthing Went Wrong please check the support",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
                 }
+
             }
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -310,23 +341,36 @@ String img;
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
-                        ImageIcon icon = new ImageIcon(new ImageIcon("logo.png").getImage().getScaledInstance(150, 50, Image.SCALE_DEFAULT));
+        ImageIcon icon = new ImageIcon(new ImageIcon("logo.png").getImage().getScaledInstance(150, 50, Image.SCALE_DEFAULT));
 
         JOptionPane.showMessageDialog(this,
-                                new JLabel("", icon, JLabel.LEFT),
-                                "Our Company",
-                                JOptionPane.INFORMATION_MESSAGE);
+                new JLabel("", icon, JLabel.LEFT),
+                "Our Company",
+                JOptionPane.INFORMATION_MESSAGE);
 
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         // TODO add your handling code here:
-         JOptionPane.showMessageDialog(this,
-                                "You Extract data will be in Home DIR",
-                                "Travware",
-                                JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this,
+                "You Extract data will be in Home DIR",
+                "Travware",
+                JOptionPane.INFORMATION_MESSAGE);
 
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+String imagePath;
+    private void chooseRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseRadioActionPerformed
+        // TODO add your handling code here:
+        JFileChooser openFile = new JFileChooser();
+        openFile.showOpenDialog(null);
+        try {
+            imagePath = openFile.getSelectedFile().getAbsolutePath();
+            System.out.println(imagePath);
+        } catch (Exception e) {
+
+        }
+        
+    }//GEN-LAST:event_chooseRadioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -356,10 +400,9 @@ String img;
         //</editor-fold>
 
         /* Create and display the form */
-        
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-        
+
                 try {
 
                     new Main().setVisible(true);
@@ -385,9 +428,9 @@ String img;
                 openFile.setDialogTitle("Save Parsing Data");
                 openFile.showOpenDialog(null);
                 savePath = openFile.getSelectedFile();
-                img =contPdf.parsePdfToText(browsePath, savePath);
-                if (img.equals("") && img.isEmpty() || img== null) {
-                    
+                img = contPdf.pdfToDIrAndimgToString(browsePath, savePath);
+                if (img.equals("") && img.isEmpty() || img == null) {
+
                     JOptionPane.showMessageDialog(this,
                             "Somthing Went Wrong please check the support",
                             "Error",
@@ -395,9 +438,9 @@ String img;
 
                     success = false;
                 } else {
-                    
+
                     success = true;
-                    
+
                 }
 
             } catch (IOException ex) {
@@ -410,7 +453,10 @@ String img;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBrowse;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JPanel cards;
+    private javax.swing.JRadioButton chooseRadio;
+    private javax.swing.JRadioButton defRadio;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
